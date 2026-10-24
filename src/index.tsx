@@ -102,43 +102,36 @@ console.log(`🚀 Server running at ${server.url}`);
 
 const targetUrl = `http://localhost:${server.port}`;
 
-const PROFILE_DIR = "/tmp/kiosk-profile";
 let browserProcess: any;
 
-for (const bin of [
-  "chromium",
-  "chromium-browser",
-  "google-chrome",
-  "firefox",
-]) {
-  try {
-    const proc = Bun.spawn(
-      [
-        bin,
-        "--kiosk",
-        `--user-data-dir=${PROFILE_DIR}`,
-        "--no-first-run",
-        "--disable-background-networking", // silences the GCM error
-        targetUrl,
-      ],
-      { stdout: "inherit", stderr: "inherit" },
-    );
-    browserProcess = proc;
-    proc.exited.then((code) => console.log(`${bin} exited (${code})`));
-    break;
-  } catch (e) {
-    // Try next browser binary
-  }
-}
-
-if (!browserProcess) {
-  console.error("Could not auto-launch window. Please open browser manually.");
+try {
+  browserProcess = Bun.spawn(
+    [
+      "flatpak",
+      "run",
+      "org.mozilla.firefox",
+      "--kiosk",
+      "--new-instance",
+      targetUrl,
+    ],
+    { stdout: "inherit", stderr: "inherit" },
+  );
+  browserProcess.exited.then((code: number) =>
+    console.log(`Firefox exited (${code})`),
+  );
+} catch (e) {
+  console.error("Could not launch Flatpak Firefox:", e);
 }
 
 const shutdownApp = async () => {
+  console.log("Shutting down WebTV and Firefox...");
+
+  // Stop the Flatpak Firefox instance
+  await $`flatpak kill org.mozilla.firefox`.nothrow().quiet();
+
+  // Stop the browser launcher process
   browserProcess?.kill();
-  // catches wrappers and child processes: everything started with our profile
-  await $`pkill -f -- ${"--user-data-dir=" + PROFILE_DIR}`.nothrow().quiet();
+
   process.exit(0);
 };
 
