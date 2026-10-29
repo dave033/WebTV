@@ -57,7 +57,7 @@ export function App() {
 
   return (
     <div
-      className="flex flex-col w-screen h-screen overflow-hidden duration-300 ease-in-out"
+      className="flex flex-col w-screen h-screen overflow-hidden bg-cover bg-center bg-no-repeat duration-300 ease-in-out"
       style={{
         backgroundImage: `url(${focusedAppBG ? focusedAppBG : config.backgroundImage})`,
       }}

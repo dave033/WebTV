@@ -6,6 +6,7 @@ import {
   useFocusable,
 } from "@noriginmedia/norigin-spatial-navigation";
 import { useEffect, useState } from "react";
+import { DOCK_COLUMNS } from "@/constants";
 
 const AppCard = ({
   app,
@@ -27,18 +28,18 @@ const AppCard = ({
     onEnterPress: () => execute(app.cliCommand, setIsLoading),
     onArrowPress: (direction) => {
       const lastIndex = totalApps - 1;
-      const currentRow = Math.floor(index / 6);
-      const lastRow = Math.floor(lastIndex / 6);
+      const currentRow = Math.floor(index / DOCK_COLUMNS);
+      const lastRow = Math.floor(lastIndex / DOCK_COLUMNS);
 
       switch (direction) {
         case "up":
-          if (index < 6) setFocus("LOCK");
-          else setFocus(`APP_${index - 6}`);
+          if (index < DOCK_COLUMNS) setFocus("LOCK");
+          else setFocus(`APP_${index - DOCK_COLUMNS}`);
           break;
 
         case "down":
           if (currentRow < lastRow) {
-            setFocus(`APP_${Math.min(index + 6, lastIndex)}`);
+            setFocus(`APP_${Math.min(index + DOCK_COLUMNS, lastIndex)}`);
           }
           break;
 
@@ -54,7 +55,7 @@ const AppCard = ({
       return false;
     },
     onFocus: () => {
-      if (index < 6) {
+      if (index < DOCK_COLUMNS) {
         updateIsDockExpanded(false);
       } else {
         updateIsDockExpanded(true);
@@ -67,7 +68,7 @@ const AppCard = ({
   });
 
   useEffect(() => {
-    if (!focused || index < 6) return;
+    if (!focused || index < DOCK_COLUMNS) return;
 
     const scroll = () => {
       const el = ref.current as HTMLElement | null;
@@ -97,7 +98,7 @@ const AppCard = ({
     <img
       ref={ref}
       key={index}
-      className={`scroll-my-8 rounded-[33.19] transition-all duration-300 ease-in-out w-62.75 h-37.5 ${
+      className={`scroll-my-8 rounded-[33.19] transition-all duration-300 ease-in-out w-full aspect-[5/3] ${
         focused ? "outline-white/20 outline scale-125 z-10" : ""
       } ${
         isLoading && focusedApp === app.name

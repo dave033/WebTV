@@ -3,6 +3,12 @@
   "backgroundImage": "/assets/background.jpg",
   "apps": [
     {
+      "name": "Home Assistant",
+      "cliCommand": "/home/dave/web-launcher/node_modules/.bin/electron /home/dave/web-launcher --site=http://192.168.1.101/van-kiosk/van",
+      "image": "/assets/apps/ha.png",
+      "backgroundImage": "/assets/apps/backgrounds/ha_background.png"
+    },
+    {
      "name": "Jellyfin",
      "cliCommand": "flatpak run org.jellyfin.JellyfinDesktop --fullscreen",
      "image": "/assets/apps/jellyfin.png",
@@ -15,23 +21,22 @@
       "backgroundImage": "/assets/apps/backgrounds/youtube_background.png"
     },
     {
-      "name": "stremio",
-      "cliCommand": "flatpak run com.stremio.Stremio",
-      "image": "/assets/apps/stremio.png",
-      "backgroundImage": "/assets/apps/backgrounds/stremio_background.png"
-    },
-    {
       "name": "Twitch",
-      "cliCommand": "flatpak run org.mozilla.firefox --no-remote -P kiosk --kiosk https://twitch.com",
       "image": "/assets/apps/twitch.png",
+      "cliCommand": "/home/dave/web-launcher/node_modules/.bin/electron /home/dave/web-launcher --site=https://twitch.com/",
       "backgroundImage": "/assets/apps/backgrounds/twitch_background.png"
-
     },
     {
-      "name": "steam",
-      "cliCommand": "steam -gamepadui",
-      "image": "/assets/apps/steam.png",
-      "backgroundImage": "/assets/apps/backgrounds/steam_background.png"
+      "name": "IPTV",
+      "image": "/assets/apps/iptv.png",
+      "cliCommand": "/home/dave/web-launcher/node_modules/.bin/electron /home/dave/web-launcher --site=http://192.168.1.105:3000/",
+      "backgroundImage": "/assets/apps/backgrounds/iptv_background.png"
+    },
+    {
+      "name": "Music Assistant",
+      "image": "/assets/apps/music_assistant.png",
+      "cliCommand": "/home/dave/web-launcher/node_modules/.bin/electron /home/dave/web-launcher --site=192.168.1.101/app/d5369777_music_assistant/",
+      "backgroundImage": "/assets/apps/backgrounds/music_assistant_background.png"
     },
     {
       "name": "retroarch",
