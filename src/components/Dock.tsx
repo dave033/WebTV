@@ -8,8 +8,10 @@ import {
   DOCK_COLUMNS,
   DOCK_GAP_X,
   DOCK_GAP_Y,
-  DOCK_INNER_PADDING,
+  DOCK_BORDER,
+  DOCK_FOCUS_MARGIN,
   DOCK_SIDE_PADDING,
+  FOCUS_SCALE,
 } from "@/constants";
 
 const Dock = () => {
@@ -22,11 +24,19 @@ const Dock = () => {
   const extraRowsCount = Math.ceil(otherAppsCount / DOCK_COLUMNS);
 
   // Card size is derived from the screen width so DOCK_COLUMNS cards always fit.
+  // The pill's side padding = how far a focused card grows + a small margin,
+  // so the padding depends on the card width and the card width on the padding.
+  // Solving that: width = free space / (columns + 2 x growth per side).
+  const growthPerSide = (FOCUS_SCALE - 1) / 2; // 0.125 = 12.5% of card width
+  const freeSpace =
+    DOCK_SIDE_PADDING +
+    2 * DOCK_BORDER +
+    2 * DOCK_FOCUS_MARGIN +
+    (DOCK_COLUMNS - 1) * DOCK_GAP_X;
   const cardSizeVars = {
-    "--card-w": `calc((100vw - ${DOCK_SIDE_PADDING + DOCK_INNER_PADDING}px - ${
-      (DOCK_COLUMNS - 1) * DOCK_GAP_X
-    }px) / ${DOCK_COLUMNS})`,
+    "--card-w": `calc((100vw - ${freeSpace}px) / ${DOCK_COLUMNS + 2 * growthPerSide})`,
     "--card-h": `calc(var(--card-w) * ${CARD_ASPECT})`,
+    "--dock-pad-x": `calc(var(--card-w) * ${growthPerSide} + ${DOCK_FOCUS_MARGIN}px)`,
   } as React.CSSProperties;
 
   const gridColumns = `repeat(${DOCK_COLUMNS}, minmax(0, 1fr))`;
@@ -65,8 +75,11 @@ const Dock = () => {
       }}
     >
       <div
-        className="p-6 bg-gray-950/40 rounded-[65px] border-white/20 border grid gap-x-10.5"
-        style={{ gridTemplateColumns: gridColumns }}
+        className="py-6 bg-gray-950/40 rounded-[65px] border-white/20 border grid gap-x-10.5"
+        style={{
+          gridTemplateColumns: gridColumns,
+          paddingInline: "var(--dock-pad-x)",
+        }}
       >
         {apps.slice(0, DOCK_COLUMNS).map((app, index) => (
           <AppCard
@@ -83,6 +96,8 @@ const Dock = () => {
         className="p-8 grid gap-x-10.5 gap-y-12 flex-1 min-h-0 overflow-y-auto transition-all duration-500 ease-in-out"
         style={{
           gridTemplateColumns: gridColumns,
+          // line the rows below up with the dock row (+ the pill's border)
+          paddingInline: `calc(var(--dock-pad-x) + ${DOCK_BORDER}px)`,
           marginBottom: isDockExpanded ? "0px" : marginBottomAmount,
         }}
       >
