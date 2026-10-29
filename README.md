@@ -2,6 +2,9 @@
 
 # webTV
 
+This is just my personal fork of https://github.com/praxham/WebTV built for my needs inside my campervan
+you should probably go Praxham's page and use that one
+
 **A living-room launcher for your HTPC, built as a website.**
 
 Controller- and remote-friendly. Fully themeable with Tailwind. Clone it, run it, make it yours.
